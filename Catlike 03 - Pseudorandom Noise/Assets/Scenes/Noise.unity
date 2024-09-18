@@ -365,9 +365,10 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: ff63ca8bcde434918bcd963595aebb6a, type: 2}
   shape: 1
   instanceScale: 2
-  resolution: 64
+  resolution: 256
   displacement: 0.1
   seed: 0
+  type: 0
   dimensions: 3
   domain:
     translation:
