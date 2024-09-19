@@ -82,6 +82,9 @@ public readonly struct SmallXXHash4 {
 	public SmallXXHash4 Eat (int4 data) =>
 		RotateLeft(accumulator + (uint4)data * primeC, 17) * primeD;
 
+	public static SmallXXHash4 operator + (SmallXXHash4 h, int v) =>
+		h.accumulator + (uint)v;
+
 	public static implicit operator uint4 (SmallXXHash4 hash) {
 		uint4 avalanche = hash.accumulator;
 		avalanche ^= avalanche >> 15;
