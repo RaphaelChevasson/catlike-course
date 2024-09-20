@@ -12,6 +12,8 @@ public static partial class Noise {
 
 	public interface ILattice {
 		LatticeSpan4 GetLatticeSpan4 (float4 coordinates, int frequency);
+
+		int4 ValidateSingleStep (int4 points, int frequency);
 	}
 
 	public struct LatticeNormal : ILattice {
@@ -28,6 +30,8 @@ public static partial class Noise {
 			span.t = span.t * span.t * span.t * (span.t * (span.t * 6f - 15f) + 10f);
 			return span;
 		}
+
+		public int4 ValidateSingleStep (int4 points, int frequency) => points;
 	}
 
 	public struct LatticeTiling : ILattice {
@@ -49,6 +53,9 @@ public static partial class Noise {
 			span.t = span.t * span.t * span.t * (span.t * (span.t * 6f - 15f) + 10f);
 			return span;
 		}
+
+		public int4 ValidateSingleStep (int4 points, int frequency) =>
+			select(select(points, 0, points == frequency), frequency - 1, points == -1);
 	}
 
 	public struct Lattice1D<L, G> : INoise

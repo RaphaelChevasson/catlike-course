@@ -82,6 +82,12 @@ public readonly struct SmallXXHash4 {
 	public SmallXXHash4 Eat (int4 data) =>
 		RotateLeft(accumulator + (uint4)data * primeC, 17) * primeD;
 
+	public uint4 GetBits (int count, int shift) =>
+		((uint4)this >> shift) & (uint)((1 << count) - 1);
+
+	public float4 GetBitsAsFloats01 (int count, int shift) =>
+		(float4)GetBits(count, shift) * (1f / ((1 << count) - 1));
+
 	public static SmallXXHash4 operator + (SmallXXHash4 h, int v) =>
 		h.accumulator + (uint)v;
 

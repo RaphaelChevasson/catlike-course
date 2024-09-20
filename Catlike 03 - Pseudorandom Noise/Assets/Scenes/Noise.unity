@@ -370,10 +370,10 @@ MonoBehaviour:
   noiseSettings:
     seed: 0
     frequency: 4
-    octaves: 3
+    octaves: 1
     lacunarity: 2
     persistence: 0.5
-  type: 0
+  type: 6
   dimensions: 3
   tiling: 0
   domain:
