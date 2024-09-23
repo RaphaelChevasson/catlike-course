@@ -369,11 +369,11 @@ MonoBehaviour:
   displacement: 0.1
   noiseSettings:
     seed: 0
-    frequency: 4
+    frequency: 8
     octaves: 1
     lacunarity: 2
     persistence: 0.5
-  type: 6
+  type: 4
   dimensions: 3
   tiling: 0
   domain:
