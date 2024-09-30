@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh Material
+  m_Name: Ripple
   m_Shader: {fileID: -6465566751694194690, guid: 78e4b1e793ade4c97badac83b453e276, type: 3}
   m_ShaderKeywords: BOOLEAN_1C7D2FC98E8248B1B736D4A10E088CFA_ON _NORMALMAP
   m_LightmapFlags: 4
