@@ -154,9 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a7e1dd636864318be86419004f9991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshType: 7
+  meshType: 8
   meshOptimization: 0
-  resolution: 6
+  resolution: 20
   gizmos: 1
   material: 0
   materials:
