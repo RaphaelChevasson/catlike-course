@@ -156,9 +156,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshType: 8
   meshOptimization: 0
-  resolution: 20
+  resolution: 12
   gizmos: 1
-  material: 0
+  material: 3
   materials:
   - {fileID: 2100000, guid: 95dee7f8f45e149f5965edecbbd92893, type: 2}
   - {fileID: 2100000, guid: c2470d2e0c902441a88c202fd07393ca, type: 2}
