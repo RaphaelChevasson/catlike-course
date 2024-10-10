@@ -155,10 +155,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshType: 1
-  recalculateNormals: 1
-  recalculateTangents: 1
+  noiseType: 0
+  dimensions: 3
+  recalculateNormals: 0
+  recalculateTangents: 0
   meshOptimization: 0
-  resolution: 20
+  resolution: 50
   displacement: 0.5
   noiseSettings:
     seed: 0
@@ -179,7 +181,7 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
-  gizmos: 1
+  gizmos: 6
   material: 0
   materials:
   - {fileID: 2100000, guid: c137e64bf4e724d0a8a4fad3c212e38d, type: 2}
