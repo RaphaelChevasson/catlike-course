@@ -156,15 +156,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshType: 1
   noiseType: 0
-  dimensions: 3
+  dimensions: 2
   recalculateNormals: 0
   recalculateTangents: 0
   meshOptimization: 0
-  resolution: 50
+  resolution: 20
   displacement: 0.5
   noiseSettings:
     seed: 0
-    frequency: 4
+    frequency: 2
     octaves: 1
     lacunarity: 2
     persistence: 0.5
