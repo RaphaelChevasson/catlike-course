@@ -3,21 +3,21 @@ using Unity.Mathematics;
 public static partial class Noise {
 
 	public interface IVoronoiFunction {
-		float4 Evaluate (float4x2 minima);
+		Sample4 Evaluate (VoronoiData data);
 	}
 
 	public struct F1 : IVoronoiFunction {
 
-		public float4 Evaluate (float4x2 distances) => distances.c0;
+		public Sample4 Evaluate (VoronoiData data) => data.a;
 	}
 
 	public struct F2 : IVoronoiFunction {
 
-		public float4 Evaluate (float4x2 distances) => distances.c1;
+		public Sample4 Evaluate (VoronoiData data) => data.b;
 	}
 
 	public struct F2MinusF1 : IVoronoiFunction {
 
-		public float4 Evaluate (float4x2 distances) => distances.c1 - distances.c0;
+		public Sample4 Evaluate (VoronoiData data) => data.b - data.a;
 	}
 }

@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshType: 1
-  noiseType: 0
+  noiseType: 9
   dimensions: 2
   recalculateNormals: 0
   recalculateTangents: 0
