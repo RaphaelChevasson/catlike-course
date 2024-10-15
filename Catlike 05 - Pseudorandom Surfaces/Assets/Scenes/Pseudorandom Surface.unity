@@ -154,14 +154,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a7e1dd636864318be86419004f9991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshType: 1
-  noiseType: 9
-  dimensions: 2
+  meshType: 8
+  noiseType: 3
+  dimensions: 3
   recalculateNormals: 0
   recalculateTangents: 0
   meshOptimization: 0
   resolution: 20
-  displacement: 0.5
+  displacement: 0.25
   noiseSettings:
     seed: 0
     frequency: 2

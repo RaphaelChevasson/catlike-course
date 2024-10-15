@@ -8,7 +8,14 @@ public static partial class Noise {
 
 		public float4 v, dx, dy, dz;
 
-		public float4x3 Derivatives => float4x3(dx, dy, dz);
+		public float4x3 Derivatives {
+			get => float4x3(dx, dy, dz);
+			set {
+				dx = value.c0;
+				dy = value.c1;
+				dz = value.c2;
+			}
+		}
 
 		public Sample4 Smoothstep {
 			get {

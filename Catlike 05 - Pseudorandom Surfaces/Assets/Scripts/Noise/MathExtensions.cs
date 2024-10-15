@@ -4,6 +4,11 @@ using static Unity.Mathematics.math;
 
 public static class MathExtensions {
 
+	public static float4x3 NormalizeRows (this float4x3 m) {
+		float4 normalizer = rsqrt(m.c0 * m.c0 + m.c1 * m.c1 + m.c2 * m.c2);
+		return float4x3(m.c0 * normalizer, m.c1 * normalizer, m.c2 * normalizer);
+	}
+
 	public static float4x3 TransformVectors (
 		this float3x4 trs, float4x3 p, float w = 1f
 	) => float4x3(
