@@ -111,6 +111,82 @@ public class ProceduralSurface : MonoBehaviour {
 		}
 	};
 
+	static FlowJobScheduleDelegate[,] flowJobs = {
+		{
+			FlowJob<Lattice1D<LatticeNormal, Perlin>>.ScheduleParallel,
+			FlowJob<Lattice2D<LatticeNormal, Perlin>>.ScheduleParallel,
+			FlowJob<Lattice3D<LatticeNormal, Perlin>>.ScheduleParallel
+		},
+		{
+			FlowJob<Lattice1D<LatticeNormal, Smoothstep<Turbulence<Perlin>>>>
+				.ScheduleParallel,
+			FlowJob<Lattice2D<LatticeNormal, Smoothstep<Turbulence<Perlin>>>>
+				.ScheduleParallel,
+			FlowJob<Lattice3D<LatticeNormal, Smoothstep<Turbulence<Perlin>>>>
+				.ScheduleParallel
+		},
+		{
+			FlowJob<Lattice1D<LatticeNormal, Value>>.ScheduleParallel,
+			FlowJob<Lattice2D<LatticeNormal, Value>>.ScheduleParallel,
+			FlowJob<Lattice3D<LatticeNormal, Value>>.ScheduleParallel
+		},
+		{
+			FlowJob<Simplex1D<Simplex>>.ScheduleParallel,
+			FlowJob<Simplex2D<Simplex>>.ScheduleParallel,
+			FlowJob<Simplex3D<Simplex>>.ScheduleParallel
+		},
+		{
+			FlowJob<Simplex1D<Smoothstep<Turbulence<Simplex>>>>.ScheduleParallel,
+			FlowJob<Simplex2D<Smoothstep<Turbulence<Simplex>>>>.ScheduleParallel,
+			FlowJob<Simplex3D<Smoothstep<Turbulence<Simplex>>>>.ScheduleParallel
+		},
+		{
+			FlowJob<Simplex1D<Value>>.ScheduleParallel,
+			FlowJob<Simplex2D<Value>>.ScheduleParallel,
+			FlowJob<Simplex3D<Value>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Worley, F1>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Worley, F2>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, SmoothWorley, F1>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, SmoothWorley, F1>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, SmoothWorley, F1>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, SmoothWorley, F2>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, SmoothWorley, F2>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, SmoothWorley, F2>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Chebyshev, F1>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F2>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Chebyshev, F2>>.ScheduleParallel
+		},
+		{
+			FlowJob<Voronoi1D<LatticeNormal, Worley, F2MinusF1>>.ScheduleParallel,
+			FlowJob<Voronoi2D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel,
+			FlowJob<Voronoi3D<LatticeNormal, Chebyshev, F2MinusF1>>.ScheduleParallel
+		}
+	};
+
 	public enum NoiseType {
 		Perlin, PerlinSmoothTurbulence, PerlinValue,
 		Simplex, SimplexSmoothTurbulence, SimplexValue,
@@ -150,6 +226,11 @@ public class ProceduralSurface : MonoBehaviour {
 		scale = 1f
 	};
 
+	public enum FlowMode { Off, Curl, Downhill }
+
+	[SerializeField]
+	FlowMode flowMode;
+
 	[System.Flags]
 	public enum GizmoMode {
 		Nothing = 0, Vertices = 1, Normals = 0b10, Tangents = 0b100, Triangles = 0b1000
@@ -168,6 +249,8 @@ public class ProceduralSurface : MonoBehaviour {
 
 	Mesh mesh;
 
+	ParticleSystem flowSystem;
+
 	[System.NonSerialized]
 	Vector3[] vertices, normals;
 
@@ -177,12 +260,15 @@ public class ProceduralSurface : MonoBehaviour {
 	[System.NonSerialized]
 	int[] triangles;
 
+	bool IsPlane => meshType < MeshType.CubeSphere;
+
 	void Awake () {
 		mesh = new Mesh {
 			name = "Procedural Mesh"
 		};
 		GetComponent<MeshFilter>().mesh = mesh;
 		materials[(int)displacement] = new Material(materials[(int)displacement]);
+		flowSystem = GetComponent<ParticleSystem>();
 	}
 
 	void OnDrawGizmos () {
@@ -248,6 +334,15 @@ public class ProceduralSurface : MonoBehaviour {
 		}
 	}
 
+	void OnParticleUpdateJobScheduled () {
+		if (flowMode != FlowMode.Off) {
+			flowJobs[(int)noiseType, dimensions - 1](
+				flowSystem, noiseSettings, domain, displacement,
+				IsPlane, flowMode == FlowMode.Curl
+			);
+		}
+	}
+
 	void OnValidate () => enabled = true;
 
 	void Update () {
@@ -261,10 +356,20 @@ public class ProceduralSurface : MonoBehaviour {
 
 		if (material == MaterialMode.Displacement) {
 			materials[(int)MaterialMode.Displacement].SetFloat(
-				materialIsPlaneId, meshType < MeshType.CubeSphere ? 1f : 0f
+				materialIsPlaneId, IsPlane ? 1f : 0f
 			);
 		}
 		GetComponent<MeshRenderer>().material = materials[(int)material];
+
+		if (flowMode == FlowMode.Off) {
+			flowSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+		}
+		else {
+			flowSystem.Play();
+			ParticleSystem.ShapeModule shapeModule = flowSystem.shape;
+			shapeModule.shapeType = IsPlane ?
+				ParticleSystemShapeType.Rectangle : ParticleSystemShapeType.Sphere;
+		}
 	}
 
 	void GenerateMesh () {
@@ -272,8 +377,7 @@ public class ProceduralSurface : MonoBehaviour {
 		Mesh.MeshData meshData = meshDataArray[0];
 
 		surfaceJobs[(int)noiseType, dimensions - 1](
-			meshData, resolution, noiseSettings, domain, displacement,
-			meshType < MeshType.CubeSphere,
+			meshData, resolution, noiseSettings, domain, displacement, IsPlane,
 			meshJobs[(int)meshType](
 				mesh, meshData, resolution, default,
 				Vector3.one * Mathf.Abs(displacement), true
