@@ -4,135 +4,132 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
 	[SerializeField]
-	Ball ball;
+	TextMeshPro minesText;
 
 	[SerializeField]
-	Paddle bottomPaddle, topPaddle;
-
-	[SerializeField, Min(0f)]
-	Vector2 arenaExtents = new Vector2(10f, 10f);
-
-	[SerializeField, Min(2)]
-	int pointsToWin = 3;
+	Material material;
 
 	[SerializeField]
-	TextMeshPro countdownText;
+	Mesh mesh;
 
-	[SerializeField, Min(1f)]
-	float newGameDelay = 3f;
+	[SerializeField, Min(1)]
+	int rows = 8, columns = 21, mines = 30;
 
-	[SerializeField]
-	LivelyCamera livelyCamera;
+	Grid grid;
 
-	float countdownUntilNewGame;
+	GridVisualization visualization;
 
-	void Awake () => countdownUntilNewGame = newGameDelay;
+	int markedSureCount;
+
+	bool isGameOver;
+
+	void OnEnable ()
+	{
+		grid.Initialize(rows, columns);
+		visualization.Initialize(grid, material, mesh);
+		StartNewGame();
+	}
 
 	void StartNewGame ()
 	{
-		ball.StartNewGame();
-		bottomPaddle.StartNewGame();
-		topPaddle.StartNewGame();
+		isGameOver = false;
+		mines = Mathf.Min(mines, grid.CellCount);
+		minesText.SetText("{0}", mines);
+		markedSureCount = 0;
+		grid.PlaceMines(mines);
+	}
+
+	void OnDisable ()
+	{
+		grid.Dispose();
+		visualization.Dispose();
 	}
 
 	void Update ()
 	{
-		bottomPaddle.Move(ball.Position.x, arenaExtents.x);
-		topPaddle.Move(ball.Position.x, arenaExtents.x);
+		if (grid.Rows != rows || grid.Columns != columns)
+		{
+			OnDisable();
+			OnEnable();
+		}
 
-		if (countdownUntilNewGame <= 0f)
-		{
-			UpdateGame();
-		}
-		else
-		{
-			UpdateCountdown();
-		}
+		PerformAction();
+		visualization.Draw();
 	}
 
-	void UpdateGame ()
+	void PerformAction ()
 	{
-		ball.Move();
-		BounceYIfNeeded();
-		BounceXIfNeeded(ball.Position.x);
-		ball.UpdateVisualization();
-	}
-
-	void UpdateCountdown ()
-	{
-		countdownUntilNewGame -= Time.deltaTime;
-		if (countdownUntilNewGame <= 0f)
+		bool revealAction = Input.GetMouseButtonDown(0);
+		bool markAction = Input.GetMouseButtonDown(1);
+		if (
+			(revealAction || markAction) &&
+			visualization.TryGetHitCellIndex(
+				Camera.main.ScreenPointToRay(Input.mousePosition), out int cellIndex
+			)
+		)
 		{
-			countdownText.gameObject.SetActive(false);
-			StartNewGame();
-		}
-		else
-		{
-			float displayValue = Mathf.Ceil(countdownUntilNewGame);
-			if (displayValue < newGameDelay)
+			if (isGameOver)
 			{
-				countdownText.SetText("{0}", displayValue);
+				StartNewGame();
+			}
+			if (revealAction)
+			{
+				DoRevealAction(cellIndex);
+			}
+			else
+			{
+				DoMarkAction(cellIndex);
 			}
 		}
 	}
 
-	void BounceXIfNeeded (float x)
+	void DoMarkAction (int cellIndex)
 	{
-		float xExtents = arenaExtents.x - ball.Extents;
-		if (x < -xExtents)
+		CellState state = grid[cellIndex];
+		if (state.Is(CellState.Revealed))
 		{
-			livelyCamera.PushXZ(ball.Velocity);
-			ball.BounceX(-xExtents);
+			return;
 		}
-		else if (x > xExtents)
+
+		if (state.IsNot(CellState.Marked))
 		{
-			livelyCamera.PushXZ(ball.Velocity);
-			ball.BounceX(xExtents);
+			grid[cellIndex] = state.With(CellState.MarkedSure);
+			markedSureCount += 1;
 		}
-	}
-
-	void BounceYIfNeeded ()
-	{
-		float yExtents = arenaExtents.y - ball.Extents;
-		if (ball.Position.y < -yExtents)
+		else if (state.Is(CellState.MarkedSure))
 		{
-			BounceY(-yExtents, bottomPaddle, topPaddle);
-		}
-		else if (ball.Position.y > yExtents)
-		{
-			BounceY(yExtents, topPaddle, bottomPaddle);
-		}
-	}
-
-	void BounceY (float boundary, Paddle defender, Paddle attacker)
-	{
-		float durationAfterBounce = (ball.Position.y - boundary) / ball.Velocity.y;
-		float bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
-
-		BounceXIfNeeded(bounceX);
-		bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
-		livelyCamera.PushXZ(ball.Velocity);
-		ball.BounceY(boundary);
-
-		if (defender.HitBall(bounceX, ball.Extents, out float hitFactor))
-		{
-			ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
+			grid[cellIndex] =
+				state.Without(CellState.MarkedSure).With(CellState.MarkedUnsure);
+			markedSureCount -= 1;
 		}
 		else
 		{
-			livelyCamera.JostleY();
-			if (attacker.ScorePoint(pointsToWin))
-			{
-				EndGame();
-			}
+			grid[cellIndex] = state.Without(CellState.MarkedUnsure);
 		}
+
+		minesText.SetText("{0}", mines - markedSureCount);
 	}
 
-	void EndGame ()
+	void DoRevealAction (int cellIndex)
 	{
-		countdownUntilNewGame = newGameDelay;
-		countdownText.SetText("GAME OVER");
-		countdownText.gameObject.SetActive(true);
-		ball.EndGame();
+		CellState state = grid[cellIndex];
+		if (state.Is(CellState.MarkedOrRevealed))
+		{
+			return;
+		}
+
+		grid.Reveal(cellIndex);
+
+		if (state.Is(CellState.Mine))
+		{
+			isGameOver = true;
+			minesText.SetText("FAILURE");
+			grid.RevealMinesAndMistakes();
+		}
+		else if (grid.HiddenCellCount == mines)
+		{
+			isGameOver = true;
+			minesText.SetText("SUCCESS");
+		}
 	}
 }
