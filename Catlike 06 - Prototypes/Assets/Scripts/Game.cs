@@ -4,132 +4,83 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
 	[SerializeField]
-	TextMeshPro minesText;
+	SkylineGenerator obstacleGenerator;
 
 	[SerializeField]
-	Material material;
+	SkylineGenerator[] skylineGenerators;
 
 	[SerializeField]
-	Mesh mesh;
+	Runner runner;
 
-	[SerializeField, Min(1)]
-	int rows = 8, columns = 21, mines = 30;
+	[SerializeField]
+	TrackingCamera trackingCamera;
 
-	Grid grid;
+	[SerializeField]
+	TextMeshPro displayText;
 
-	GridVisualization visualization;
+	[SerializeField, Min(0.001f)]
+	float maxDeltaTime = 1f / 120f;
 
-	int markedSureCount;
+	[SerializeField]
+	float extraGapFactor = 0.5f, extraSequenceFactor = 1f;
 
-	bool isGameOver;
-
-	void OnEnable ()
-	{
-		grid.Initialize(rows, columns);
-		visualization.Initialize(grid, material, mesh);
-		StartNewGame();
-	}
+	bool isPlaying;
 
 	void StartNewGame ()
 	{
-		isGameOver = false;
-		mines = Mathf.Min(mines, grid.CellCount);
-		minesText.SetText("{0}", mines);
-		markedSureCount = 0;
-		grid.PlaceMines(mines);
-	}
-
-	void OnDisable ()
-	{
-		grid.Dispose();
-		visualization.Dispose();
+		trackingCamera.StartNewGame();
+		runner.StartNewGame(obstacleGenerator.StartNewGame(trackingCamera));
+		trackingCamera.Track(runner.Position);
+		for (int i = 0; i < skylineGenerators.Length; i++)
+		{
+			skylineGenerators[i].StartNewGame(trackingCamera);
+		}
+		isPlaying = true;
 	}
 
 	void Update ()
 	{
-		if (grid.Rows != rows || grid.Columns != columns)
+		if (isPlaying)
 		{
-			OnDisable();
-			OnEnable();
+			UpdateGame();
 		}
-
-		PerformAction();
-		visualization.Draw();
-	}
-
-	void PerformAction ()
-	{
-		bool revealAction = Input.GetMouseButtonDown(0);
-		bool markAction = Input.GetMouseButtonDown(1);
-		if (
-			(revealAction || markAction) &&
-			visualization.TryGetHitCellIndex(
-				Camera.main.ScreenPointToRay(Input.mousePosition), out int cellIndex
-			)
-		)
+		else if (Input.GetKeyDown(KeyCode.Space))
 		{
-			if (isGameOver)
-			{
-				StartNewGame();
-			}
-			if (revealAction)
-			{
-				DoRevealAction(cellIndex);
-			}
-			else
-			{
-				DoMarkAction(cellIndex);
-			}
+			StartNewGame();
 		}
 	}
-
-	void DoMarkAction (int cellIndex)
+		
+	void UpdateGame ()
 	{
-		CellState state = grid[cellIndex];
-		if (state.Is(CellState.Revealed))
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			return;
+			runner.StartJumping();
+		}
+		if (Input.GetKeyUp(KeyCode.Space))
+		{
+			runner.EndJumping();
 		}
 
-		if (state.IsNot(CellState.Marked))
+		float accumulateDeltaTime = Time.deltaTime;
+		while (accumulateDeltaTime > maxDeltaTime && isPlaying)
 		{
-			grid[cellIndex] = state.With(CellState.MarkedSure);
-			markedSureCount += 1;
+			isPlaying = runner.Run(maxDeltaTime);
+			accumulateDeltaTime -= maxDeltaTime;
 		}
-		else if (state.Is(CellState.MarkedSure))
-		{
-			grid[cellIndex] =
-				state.Without(CellState.MarkedSure).With(CellState.MarkedUnsure);
-			markedSureCount -= 1;
-		}
-		else
-		{
-			grid[cellIndex] = state.Without(CellState.MarkedUnsure);
-		}
+		isPlaying = isPlaying && runner.Run(accumulateDeltaTime);
 
-		minesText.SetText("{0}", mines - markedSureCount);
-	}
+		runner.UpdateVisualization();
+		trackingCamera.Track(runner.Position);
+		displayText.SetText("{0}", Mathf.Floor(runner.Position.x));
 
-	void DoRevealAction (int cellIndex)
-	{
-		CellState state = grid[cellIndex];
-		if (state.Is(CellState.MarkedOrRevealed))
+		obstacleGenerator.FillView(
+			trackingCamera,
+			runner.SpeedX * extraGapFactor,
+			runner.SpeedX * extraSequenceFactor
+		);
+		for (int i = 0; i < skylineGenerators.Length; i++)
 		{
-			return;
-		}
-
-		grid.Reveal(cellIndex);
-
-		if (state.Is(CellState.Mine))
-		{
-			isGameOver = true;
-			minesText.SetText("FAILURE");
-			grid.RevealMinesAndMistakes();
-		}
-		else if (grid.HiddenCellCount == mines)
-		{
-			isGameOver = true;
-			minesText.SetText("SUCCESS");
+			skylineGenerators[i].FillView(trackingCamera);
 		}
 	}
 }
