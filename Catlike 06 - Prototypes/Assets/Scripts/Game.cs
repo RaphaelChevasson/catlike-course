@@ -1,41 +1,100 @@
 using TMPro;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
+
+using static Unity.Mathematics.math;
+
+using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
 	[SerializeField]
-	SkylineGenerator obstacleGenerator;
+	MazeVisualization visualization;
 
 	[SerializeField]
-	SkylineGenerator[] skylineGenerators;
+	int2 mazeSize = int2(20, 20);
+
+	[SerializeField, Tooltip("Use zero for random seed.")]
+	int seed;
+
+	[SerializeField, Range(0f, 1f)]
+	float
+		pickLastProbability = 0.5f,
+		openDeadEndProbability = 0.5f,
+		openArbitraryProbability = 0.5f;
 
 	[SerializeField]
-	Runner runner;
+	Player player;
 
 	[SerializeField]
-	TrackingCamera trackingCamera;
+	Agent[] agents;
 
 	[SerializeField]
 	TextMeshPro displayText;
 
-	[SerializeField, Min(0.001f)]
-	float maxDeltaTime = 1f / 120f;
+	Maze maze;
 
-	[SerializeField]
-	float extraGapFactor = 0.5f, extraSequenceFactor = 1f;
+	Scent scent;
 
 	bool isPlaying;
 
+	MazeCellObject[] cellObjects;
+
 	void StartNewGame ()
 	{
-		trackingCamera.StartNewGame();
-		runner.StartNewGame(obstacleGenerator.StartNewGame(trackingCamera));
-		trackingCamera.Track(runner.Position);
-		for (int i = 0; i < skylineGenerators.Length; i++)
-		{
-			skylineGenerators[i].StartNewGame(trackingCamera);
-		}
 		isPlaying = true;
+		displayText.gameObject.SetActive(false);
+		maze = new Maze(mazeSize);
+		scent = new Scent(maze);
+		new FindDiagonalPassagesJob
+		{
+			maze = maze
+		}.ScheduleParallel(
+			maze.Length, maze.SizeEW, new GenerateMazeJob
+			{
+				maze = maze,
+				seed = seed != 0 ? seed : Random.Range(1, int.MaxValue),
+				pickLastProbability = pickLastProbability,
+				openDeadEndProbability = openDeadEndProbability,
+				openArbitraryProbability = openArbitraryProbability
+			}.Schedule()
+		).Complete();
+
+		if (cellObjects == null || cellObjects.Length != maze.Length)
+		{
+			cellObjects = new MazeCellObject[maze.Length];
+		}
+		visualization.Visualize(maze, cellObjects);
+
+		if (seed != 0)
+		{
+			Random.InitState(seed);
+		}
+
+		player.StartNewGame(maze.CoordinatesToWorldPosition(
+			int2(Random.Range(0, mazeSize.x / 4), Random.Range(0, mazeSize.y / 4))
+		));
+
+		int2 halfSize = mazeSize / 2;
+		for (int i = 0; i < agents.Length; i++)
+		{
+			var coordinates =
+				int2(Random.Range(0, mazeSize.x), Random.Range(0, mazeSize.y));
+			if (coordinates.x < halfSize.x && coordinates.y < halfSize.y)
+			{
+				if (Random.value < 0.5f)
+				{
+					coordinates.x += halfSize.x;
+				}
+				else
+				{
+					coordinates.y += halfSize.y;
+				}
+			}
+			agents[i].StartNewGame(maze, coordinates);
+		}
 	}
 
 	void Update ()
@@ -47,40 +106,51 @@ public class Game : MonoBehaviour
 		else if (Input.GetKeyDown(KeyCode.Space))
 		{
 			StartNewGame();
+			UpdateGame();
 		}
 	}
-		
+
 	void UpdateGame ()
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
+		Vector3 playerPosition = player.Move();
+		NativeArray<float> currentScent = scent.Disperse(maze, playerPosition);
+		for (int i = 0; i < agents.Length; i++)
 		{
-			runner.StartJumping();
+			Vector3 agentPosition = agents[i].Move(currentScent);
+			if (
+				new Vector2(
+					agentPosition.x - playerPosition.x,
+					agentPosition.z - playerPosition.z
+				).sqrMagnitude < 1f
+			)
+			{
+				EndGame(agents[i].TriggerMessage);
+				return;
+			}
 		}
-		if (Input.GetKeyUp(KeyCode.Space))
+	}
+
+	void EndGame (string message)
+	{
+		isPlaying = false;
+		displayText.text = message;
+		displayText.gameObject.SetActive(true);
+		for (int i = 0; i < agents.Length; i++)
 		{
-			runner.EndJumping();
+			agents[i].EndGame();
 		}
 
-		float accumulateDeltaTime = Time.deltaTime;
-		while (accumulateDeltaTime > maxDeltaTime && isPlaying)
+		for (int i = 0; i < cellObjects.Length; i++)
 		{
-			isPlaying = runner.Run(maxDeltaTime);
-			accumulateDeltaTime -= maxDeltaTime;
+			cellObjects[i].Recycle();
 		}
-		isPlaying = isPlaying && runner.Run(accumulateDeltaTime);
 
-		runner.UpdateVisualization();
-		trackingCamera.Track(runner.Position);
-		displayText.SetText("{0}", Mathf.Floor(runner.Position.x));
+		OnDestroy();
+	}
 
-		obstacleGenerator.FillView(
-			trackingCamera,
-			runner.SpeedX * extraGapFactor,
-			runner.SpeedX * extraSequenceFactor
-		);
-		for (int i = 0; i < skylineGenerators.Length; i++)
-		{
-			skylineGenerators[i].FillView(trackingCamera);
-		}
+	void OnDestroy ()
+	{
+		maze.Dispose();
+		scent.Dispose();
 	}
 }
