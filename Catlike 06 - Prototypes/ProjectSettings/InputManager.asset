@@ -22,22 +22,6 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Horizontal View
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: q
-    positiveButton: e
-    altNegativeButton: j
-    altPositiveButton: l
-    gravity: 3
-    dead: 0.001
-    sensitivity: 3
-    snap: 1
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 0
-  - serializedVersion: 3
     m_Name: Vertical
     descriptiveName: 
     descriptiveNegativeName: 
@@ -45,22 +29,6 @@ InputManager:
     positiveButton: up
     altNegativeButton: s
     altPositiveButton: w
-    gravity: 3
-    dead: 0.001
-    sensitivity: 3
-    snap: 1
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 0
-  - serializedVersion: 3
-    m_Name: Vertical View
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: k
-    positiveButton: i
-    altNegativeButton: 
-    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 3

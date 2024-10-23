@@ -1,99 +1,39 @@
 using TMPro;
-using Unity.Collections;
-using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
-
-using static Unity.Mathematics.math;
-
-using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
 	[SerializeField]
-	MazeVisualization visualization;
+	TextMeshPro startText;
 
 	[SerializeField]
-	int2 mazeSize = int2(20, 20);
-
-	[SerializeField, Tooltip("Use zero for random seed.")]
-	int seed;
-
-	[SerializeField, Range(0f, 1f)]
-	float
-		pickLastProbability = 0.5f,
-		openDeadEndProbability = 0.5f,
-		openArbitraryProbability = 0.5f;
+	TextMeshPro[] displayTexts;
 
 	[SerializeField]
-	Player player;
+	Player[] players;
 
 	[SerializeField]
-	Agent[] agents;
-
-	[SerializeField]
-	TextMeshPro displayText;
-
-	Maze maze;
-
-	Scent scent;
+	Grid grid;
 
 	bool isPlaying;
 
-	MazeCellObject[] cellObjects;
+	int activePlayerCount, currentPlayerIndex;
 
-	void StartNewGame ()
+	void Awake ()
 	{
-		isPlaying = true;
-		displayText.gameObject.SetActive(false);
-		maze = new Maze(mazeSize);
-		scent = new Scent(maze);
-		new FindDiagonalPassagesJob
+		grid.Initialize();
+		for (int i = 0; i < players.Length; i++)
 		{
-			maze = maze
-		}.ScheduleParallel(
-			maze.Length, maze.SizeEW, new GenerateMazeJob
-			{
-				maze = maze,
-				seed = seed != 0 ? seed : Random.Range(1, int.MaxValue),
-				pickLastProbability = pickLastProbability,
-				openDeadEndProbability = openDeadEndProbability,
-				openArbitraryProbability = openArbitraryProbability
-			}.Schedule()
-		).Complete();
-
-		if (cellObjects == null || cellObjects.Length != maze.Length)
-		{
-			cellObjects = new MazeCellObject[maze.Length];
+			players[i].Initialize(grid);
 		}
-		visualization.Visualize(maze, cellObjects);
+	}
 
-		if (seed != 0)
+	void OnDestroy ()
+	{
+		grid.Dispose();
+		for (int i = 0; i < players.Length; i++)
 		{
-			Random.InitState(seed);
-		}
-
-		player.StartNewGame(maze.CoordinatesToWorldPosition(
-			int2(Random.Range(0, mazeSize.x / 4), Random.Range(0, mazeSize.y / 4))
-		));
-
-		int2 halfSize = mazeSize / 2;
-		for (int i = 0; i < agents.Length; i++)
-		{
-			var coordinates =
-				int2(Random.Range(0, mazeSize.x), Random.Range(0, mazeSize.y));
-			if (coordinates.x < halfSize.x && coordinates.y < halfSize.y)
-			{
-				if (Random.value < 0.5f)
-				{
-					coordinates.x += halfSize.x;
-				}
-				else
-				{
-					coordinates.y += halfSize.y;
-				}
-			}
-			agents[i].StartNewGame(maze, coordinates);
+			players[i].Dispose();
 		}
 	}
 
@@ -103,54 +43,92 @@ public class Game : MonoBehaviour
 		{
 			UpdateGame();
 		}
-		else if (Input.GetKeyDown(KeyCode.Space))
+		else
 		{
-			StartNewGame();
-			UpdateGame();
+			for (int i = 1; i <= displayTexts.Length; i++)
+			{
+				if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+				{
+					StartNewGame(i);
+					break;
+				}
+			}
 		}
+
+		for (int i = 0; i < activePlayerCount; i++)
+		{
+			players[i].UpdateVisualization();
+		}
+		grid.Draw();
+		for (int i = 0; i < activePlayerCount; i++)
+		{
+			players[i].Draw();
+		}
+	}
+
+	void StartNewGame (int newPlayerCount)
+	{
+		grid.StartNewGame();
+		startText.gameObject.SetActive(false);
+		isPlaying = true;
+		currentPlayerIndex = 0;
+		for (int i = 0; i < activePlayerCount; i++)
+		{
+			players[i].Clear();
+		}
+		for (int i = 0; i < newPlayerCount; i++)
+		{
+			int directionIndex = i == 1 && newPlayerCount == 2 ? 2 : i;
+			players[i].StartNewGame(
+				displayTexts[directionIndex], grid.GetStartPosition(directionIndex)
+			);
+		}
+		players[0].CreateTile();
+		activePlayerCount = newPlayerCount;
+		grid.UpdateVisualization();
 	}
 
 	void UpdateGame ()
 	{
-		Vector3 playerPosition = player.Move();
-		NativeArray<float> currentScent = scent.Disperse(maze, playerPosition);
-		for (int i = 0; i < agents.Length; i++)
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			Vector3 agentPosition = agents[i].Move(currentScent);
-			if (
-				new Vector2(
-					agentPosition.x - playerPosition.x,
-					agentPosition.z - playerPosition.z
-				).sqrMagnitude < 1f
-			)
-			{
-				EndGame(agents[i].TriggerMessage);
-				return;
-			}
+			PlaceTile();
+		}
+		else if (Input.GetKeyDown(KeyCode.RightArrow))
+		{
+			players[currentPlayerIndex].RotateTile(true);
+		}
+		else if (Input.GetKeyDown(KeyCode.LeftArrow))
+		{
+			players[currentPlayerIndex].RotateTile(false);
 		}
 	}
 
-	void EndGame (string message)
+	void PlaceTile ()
 	{
-		isPlaying = false;
-		displayText.text = message;
-		displayText.gameObject.SetActive(true);
-		for (int i = 0; i < agents.Length; i++)
+		int i = currentPlayerIndex;
+		do
 		{
-			agents[i].EndGame();
+			players[i].Walk();
+			i = (i + 1) % activePlayerCount;
 		}
+		while (i != currentPlayerIndex);
 
-		for (int i = 0; i < cellObjects.Length; i++)
+		do
 		{
-			cellObjects[i].Recycle();
+			i = (i + 1) % activePlayerCount;
 		}
+		while (i != currentPlayerIndex && !players[i].CanKeepWalking);
+		currentPlayerIndex = i;
 
-		OnDestroy();
-	}
-
-	void OnDestroy ()
-	{
-		maze.Dispose();
-		scent.Dispose();
+		if (players[currentPlayerIndex].CanKeepWalking)
+		{
+			players[currentPlayerIndex].CreateTile();
+		}
+		else
+		{
+			isPlaying = false;
+		}
+		grid.UpdateVisualization();
 	}
 }

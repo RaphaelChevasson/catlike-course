@@ -1,84 +1,73 @@
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+[System.Serializable]
+public class Player
 {
-	[SerializeField, Min(0f)]
-	float movementSpeed = 4f, rotationSpeed = 180f, mouseSensitivity = 5f;
-
 	[SerializeField]
-	float startingVerticalEyeAngle = 10f;
+	Path path;
 
-	CharacterController characterController;
+	[SerializeField, ColorUsage(false, true)]
+	Color anchorColor, bridgeColor, positionColor;
 
-	Transform eye;
+	float3 linearAnchorColor, linearBridgeColor, linearPositionColor;
 
-	Vector2 eyeAngles;
+	TextMeshPro displayText;
 
-	void Awake ()
+	Grid grid;
+
+	Grid.Position position;
+
+	public bool CanKeepWalking
+	{ get; private set; }
+
+	public void Initialize (Grid grid)
 	{
-		characterController = GetComponent<CharacterController>();
-		eye = transform.GetChild(0);
+		this.grid = grid;
+		linearAnchorColor = anchorColor.linear.GetRGB();
+		linearBridgeColor = bridgeColor.linear.GetRGB();
+		linearPositionColor = positionColor.linear.GetRGB();
+		path.Initialize();
 	}
 
-	public void StartNewGame (Vector3 position)
+	public void StartNewGame (TextMeshPro displayText, Grid.Position startPosition)
 	{
-		eyeAngles.x = Random.Range(0f, 360f);
-		eyeAngles.y = startingVerticalEyeAngle;
-		characterController.enabled = false;
-		transform.localPosition = position;
-		characterController.enabled = true;
+		this.displayText = displayText;
+		position = startPosition;
+		displayText.SetText("0");
+		displayText.gameObject.SetActive(true);
+		CanKeepWalking = true;
 	}
 
-	public Vector3 Move ()
+	public void Clear ()
 	{
-		UpdateEyeAngles();
-		UpdatePosition();
-		return transform.localPosition;
+		displayText.gameObject.SetActive(false);
+		CanKeepWalking = false;
+		path.Clear();
 	}
 
-	void UpdatePosition ()
+	public void Dispose () => path.Dispose();
+
+	public void CreateTile () => grid.CreateTile(position, linearPositionColor);
+
+	public void RotateTile (bool clockwise) => grid.RotateTile(position, clockwise);
+
+	public void Walk ()
 	{
-		var movement = new Vector2(
-			Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")
-		);
-		float sqrMagnitude = movement.sqrMagnitude;
-		if (sqrMagnitude > 1f)
+		if (CanKeepWalking)
 		{
-			movement /= Mathf.Sqrt(sqrMagnitude);
+			while (CanKeepWalking && grid.IsTileCreated(position))
+			{
+				CanKeepWalking = grid.TryMoveThroughTile(
+					ref position, path, linearAnchorColor, linearBridgeColor
+				);
+			}
+			displayText.SetText("{0}", path.Length);
 		}
-		movement *= movementSpeed;
-
-		var forward = new Vector2(
-			Mathf.Sin(eyeAngles.x * Mathf.Deg2Rad),
-			Mathf.Cos(eyeAngles.x * Mathf.Deg2Rad)
-		);
-		var right = new Vector2(forward.y, -forward.x);
-
-		movement = right * movement.x + forward * movement.y;
-		characterController.SimpleMove(new Vector3(movement.x, 0f, movement.y));
 	}
 
-	void UpdateEyeAngles ()
-	{
-		float rotationDelta = rotationSpeed * Time.deltaTime;
-		eyeAngles.x += rotationDelta * Input.GetAxis("Horizontal View");
-		eyeAngles.y -= rotationDelta * Input.GetAxis("Vertical View");
-		if (mouseSensitivity > 0f)
-		{
-			float mouseDelta = rotationDelta * mouseSensitivity;
-			eyeAngles.x += mouseDelta * Input.GetAxis("Mouse X");
-			eyeAngles.y -= mouseDelta * Input.GetAxis("Mouse Y");
-		}
+	public void UpdateVisualization () => path.UpdateVisualization();
 
-		if (eyeAngles.x > 360f)
-		{
-			eyeAngles.x -= 360f;
-		}
-		else if (eyeAngles.x < 0f)
-		{
-			eyeAngles.x += 360f;
-		}
-		eyeAngles.y = Mathf.Clamp(eyeAngles.y, -45f, 45f);
-		eye.localRotation = Quaternion.Euler(eyeAngles.y, eyeAngles.x, 0f);
-	}
+	public void Draw () => path.Draw();
 }
