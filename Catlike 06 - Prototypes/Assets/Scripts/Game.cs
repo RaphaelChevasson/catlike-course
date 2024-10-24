@@ -1,134 +1,53 @@
-using TMPro;
 using UnityEngine;
 
 public class Game : MonoBehaviour
 {
 	[SerializeField]
-	TextMeshPro startText;
+	Match3Skin match3;
 
 	[SerializeField]
-	TextMeshPro[] displayTexts;
+	bool automaticPlay;
 
-	[SerializeField]
-	Player[] players;
+	Vector3 dragStart;
 
-	[SerializeField]
-	Grid grid;
+	bool isDragging;
 
-	bool isPlaying;
-
-	int activePlayerCount, currentPlayerIndex;
-
-	void Awake ()
-	{
-		grid.Initialize();
-		for (int i = 0; i < players.Length; i++)
-		{
-			players[i].Initialize(grid);
-		}
-	}
-
-	void OnDestroy ()
-	{
-		grid.Dispose();
-		for (int i = 0; i < players.Length; i++)
-		{
-			players[i].Dispose();
-		}
-	}
+	void Awake () => match3.StartNewGame();
 
 	void Update ()
 	{
-		if (isPlaying)
+		if (match3.IsPlaying)
 		{
-			UpdateGame();
-		}
-		else
-		{
-			for (int i = 1; i <= displayTexts.Length; i++)
+			if (!match3.IsBusy)
 			{
-				if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-				{
-					StartNewGame(i);
-					break;
-				}
+				HandleInput();
 			}
+			match3.DoWork();
 		}
-
-		for (int i = 0; i < activePlayerCount; i++)
+		else if (Input.GetKeyDown(KeyCode.Space))
 		{
-			players[i].UpdateVisualization();
-		}
-		grid.Draw();
-		for (int i = 0; i < activePlayerCount; i++)
-		{
-			players[i].Draw();
+			match3.StartNewGame();
 		}
 	}
-
-	void StartNewGame (int newPlayerCount)
+	
+	void HandleInput ()
 	{
-		grid.StartNewGame();
-		startText.gameObject.SetActive(false);
-		isPlaying = true;
-		currentPlayerIndex = 0;
-		for (int i = 0; i < activePlayerCount; i++)
+		if (automaticPlay)
 		{
-			players[i].Clear();
+			match3.DoAutomaticMove();
 		}
-		for (int i = 0; i < newPlayerCount; i++)
+		else if (!isDragging && Input.GetMouseButtonDown(0))
 		{
-			int directionIndex = i == 1 && newPlayerCount == 2 ? 2 : i;
-			players[i].StartNewGame(
-				displayTexts[directionIndex], grid.GetStartPosition(directionIndex)
-			);
+			dragStart = Input.mousePosition;
+			isDragging = true;
 		}
-		players[0].CreateTile();
-		activePlayerCount = newPlayerCount;
-		grid.UpdateVisualization();
-	}
-
-	void UpdateGame ()
-	{
-		if (Input.GetKeyDown(KeyCode.Space))
+		else if (isDragging && Input.GetMouseButton(0))
 		{
-			PlaceTile();
-		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow))
-		{
-			players[currentPlayerIndex].RotateTile(true);
-		}
-		else if (Input.GetKeyDown(KeyCode.LeftArrow))
-		{
-			players[currentPlayerIndex].RotateTile(false);
-		}
-	}
-
-	void PlaceTile ()
-	{
-		int i = currentPlayerIndex;
-		do
-		{
-			players[i].Walk();
-			i = (i + 1) % activePlayerCount;
-		}
-		while (i != currentPlayerIndex);
-
-		do
-		{
-			i = (i + 1) % activePlayerCount;
-		}
-		while (i != currentPlayerIndex && !players[i].CanKeepWalking);
-		currentPlayerIndex = i;
-
-		if (players[currentPlayerIndex].CanKeepWalking)
-		{
-			players[currentPlayerIndex].CreateTile();
+			isDragging = match3.EvaluateDrag(dragStart, Input.mousePosition);
 		}
 		else
 		{
-			isPlaying = false;
+			isDragging = false;
 		}
-		grid.UpdateVisualization();
 	}
 }
