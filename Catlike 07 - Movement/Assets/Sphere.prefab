@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91228bfd6f4f40cdab0accd6381b7bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInputSpace: {fileID: 0}
   maxSpeed: 10
   maxAcceleration: 10
   maxAirAcceleration: 0
