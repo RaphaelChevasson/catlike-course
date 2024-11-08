@@ -4698,7 +4698,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh11698
+  m_Name: pb_Mesh22160
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4861,7 +4861,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh11538
+  m_Name: pb_Mesh22000
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5406,8 +5406,10 @@ MonoBehaviour:
   assetGuid: 
   m_IsSelectable: 1
   m_SelectedFaces: 
-  m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedEdges:
+  - a: 11
+    b: 10
+  m_SelectedVertices: 0b0000000a000000
 --- !u!23 &360220611
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6964,7 +6966,7 @@ MonoBehaviour:
   upAlignmentSpeed: 360
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 1587
+    m_Bits: 3635
 --- !u!1 &1000155250
 GameObject:
   m_ObjectHideFlags: 0
@@ -9915,7 +9917,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh11904
+  m_Name: pb_Mesh22366
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10622,7 +10624,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh11490
+  m_Name: pb_Mesh21952
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

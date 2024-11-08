@@ -24647,7 +24647,7 @@ MonoBehaviour:
   upAlignmentSpeed: 360
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 1587
+    m_Bits: 3635
 --- !u!81 &1822895527
 AudioListener:
   m_ObjectHideFlags: 0
