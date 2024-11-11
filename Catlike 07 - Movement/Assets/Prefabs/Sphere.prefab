@@ -58,6 +58,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,6 +111,7 @@ TrailRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -134,7 +136,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 60
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -206,9 +208,11 @@ MonoBehaviour:
   playerInputSpace: {fileID: 0}
   maxSpeed: 10
   maxClimbSpeed: 2
+  maxSwimSpeed: 5
   maxAcceleration: 10
   maxAirAcceleration: 0
   maxClimbAcceleration: 20
+  maxSwimAcceleration: 5
   jumpHeight: 2
   maxAirJumps: 0
   maxGroundAngle: 40
@@ -216,17 +220,26 @@ MonoBehaviour:
   maxClimbAngle: 140
   maxSnapSpeed: 100
   probeDistance: 1
+  submergenceOffset: 0.5
+  submergenceRange: 1
+  buoyancy: 1
+  waterDrag: 1
+  swimThreshold: 0.5
   probeMask:
     serializedVersion: 2
-    m_Bits: 3123
+    m_Bits: 7203
   stairsMask:
     serializedVersion: 2
     m_Bits: 1024
   climbMask:
     serializedVersion: 2
-    m_Bits: 1331
+    m_Bits: 5411
+  waterMask:
+    serializedVersion: 2
+    m_Bits: 16
   normalMaterial: {fileID: 2100000, guid: f3ba9cc2f46b74147a887fc2202e7d8e, type: 2}
   climbingMaterial: {fileID: 2100000, guid: 563871eb084e447869639cb8c9362551, type: 2}
+  swimmingMaterial: {fileID: 2100000, guid: 1f236688f827e4ce7b5bd6cefb73810d, type: 2}
 --- !u!54 &6315726874829106891
 Rigidbody:
   m_ObjectHideFlags: 0
