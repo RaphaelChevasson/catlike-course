@@ -93,6 +93,10 @@ public class MovingSphere : MonoBehaviour {
 
 	MeshRenderer meshRenderer;
 
+	public void PreventSnapToGround () {
+		stepsSinceLastJump = -1;
+	}
+
 	void OnValidate () {
 		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
 		minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
