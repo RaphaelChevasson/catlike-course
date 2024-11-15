@@ -17,6 +17,13 @@ public class GameDataWriter {
 		writer.Write(value);
 	}
 
+	public void Write (Color value) {
+		writer.Write(value.r);
+		writer.Write(value.g);
+		writer.Write(value.b);
+		writer.Write(value.a);
+	}
+
 	public void Write (Quaternion value) {
 		writer.Write(value.x);
 		writer.Write(value.y);

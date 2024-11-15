@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class GameDataReader {
 
+	public int Version { get; }
+
 	BinaryReader reader;
 
-	public GameDataReader (BinaryReader reader) {
+	public GameDataReader (BinaryReader reader, int version) {
 		this.reader = reader;
+		this.Version = version;
 	}
 
 	public float ReadFloat () {
@@ -15,6 +18,15 @@ public class GameDataReader {
 
 	public int ReadInt () {
 		return reader.ReadInt32();
+	}
+
+	public Color ReadColor () {
+		Color value;
+		value.r = reader.ReadSingle();
+		value.g = reader.ReadSingle();
+		value.b = reader.ReadSingle();
+		value.a = reader.ReadSingle();
+		return value;
 	}
 
 	public Quaternion ReadQuaternion () {
