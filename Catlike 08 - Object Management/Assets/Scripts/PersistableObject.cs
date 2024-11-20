@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[DisallowMultipleComponent]
 public class PersistableObject : MonoBehaviour {
 
 	public virtual void Save (GameDataWriter writer) {
