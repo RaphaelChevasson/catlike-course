@@ -38,6 +38,10 @@ public class GameDataReader {
 		return value;
 	}
 
+	public Random.State ReadRandomState () {
+		return JsonUtility.FromJson<Random.State>(reader.ReadString());
+	}
+
 	public Vector3 ReadVector3 () {
 		Vector3 value;
 		value.x = reader.ReadSingle();

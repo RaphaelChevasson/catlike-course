@@ -31,6 +31,10 @@ public class GameDataWriter {
 		writer.Write(value.w);
 	}
 
+	public void Write (Random.State value) {
+		writer.Write(JsonUtility.ToJson(value));
+	}
+
 	public void Write (Vector3 value) {
 		writer.Write(value.x);
 		writer.Write(value.y);
