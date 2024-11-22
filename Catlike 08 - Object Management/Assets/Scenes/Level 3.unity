@@ -141,6 +141,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4fcec69e25244850ac0abac58712612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnConfig:
+    movementDirection: 0
+    speed:
+      min: -2
+      max: -1
+    angularSpeed:
+      min: 0
+      max: 0
+    scale:
+      min: 1
+      max: 1
+    color:
+      hue:
+        min: 0
+        max: 1
+      saturation:
+        min: 0
+        max: 1
+      value:
+        min: 0
+        max: 1
+  overrideConfig: 0
   sequential: 1
   spawnZones:
   - {fileID: 838659757}
@@ -191,6 +213,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7512b514f184fc3af07c26aeffd4bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnConfig:
+    movementDirection: 2
+    speed:
+      min: -0.1
+      max: -0.1
+    angularSpeed:
+      min: 0
+      max: 45
+    scale:
+      min: 0.5
+      max: 1
+    color:
+      hue:
+        min: 0.45
+        max: 0.55
+      saturation:
+        min: 0.5
+        max: 1
+      value:
+        min: 0.25
+        max: 1
   surfaceOnly: 0
 --- !u!4 &186091358
 Transform:
@@ -275,6 +318,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469791f6ef77e4ab38ea66f8d310582b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnConfig:
+    movementDirection: 0
+    speed:
+      min: 0.5
+      max: 1
+    angularSpeed:
+      min: 0
+      max: 0
+    scale:
+      min: 0.5
+      max: 0.75
+    color:
+      hue:
+        min: 0
+        max: 0
+      saturation:
+        min: 0
+        max: 1
+      value:
+        min: 0
+        max: 1
   surfaceOnly: 0
 --- !u!4 &838659758
 Transform:
@@ -282,13 +346,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 838659756}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.7146389, z: -0, w: 0.6994936}
   m_LocalPosition: {x: 5, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_Children: []
   m_Father: {fileID: 41162319}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 91.227005, z: 0}
 --- !u!1 &979063396
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,6 +445,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7512b514f184fc3af07c26aeffd4bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnConfig:
+    movementDirection: 0
+    speed:
+      min: 0.1
+      max: 1
+    angularSpeed:
+      min: 0
+      max: 45
+    scale:
+      min: 0.5
+      max: 1
+    color:
+      hue:
+        min: 0
+        max: 1
+      saturation:
+        min: 0.5
+        max: 1
+      value:
+        min: 0.25
+        max: 1
   surfaceOnly: 1
 --- !u!4 &1819725318
 Transform:
@@ -388,13 +473,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1819725316}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -5}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 41162319}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &2070164971
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,6 +507,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469791f6ef77e4ab38ea66f8d310582b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnConfig:
+    movementDirection: 1
+    speed:
+      min: 0
+      max: 0
+    angularSpeed:
+      min: 0
+      max: 90
+    scale:
+      min: 0.1
+      max: 1
+    color:
+      hue:
+        min: 0
+        max: 1
+      saturation:
+        min: 1
+        max: 1
+      value:
+        min: 0.25
+        max: 0.75
   surfaceOnly: 1
 --- !u!4 &2070164973
 Transform:
@@ -429,10 +535,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2070164971}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.7425994, z: -0, w: 0.66973585}
   m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_Children: []
   m_Father: {fileID: 41162319}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -95.907005, z: 0}

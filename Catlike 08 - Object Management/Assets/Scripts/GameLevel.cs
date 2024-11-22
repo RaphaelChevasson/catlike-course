@@ -10,10 +10,8 @@ public class GameLevel : PersistableObject {
 	[SerializeField]
 	PersistableObject[] persistentObjects;
 
-	public Vector3 SpawnPoint {
-		get {
-			return spawnZone.SpawnPoint;
-		}
+	public void ConfigureSpawn(Shape shape) {
+		spawnZone.ConfigureSpawn(shape);
 	}
 
 	void OnEnable () {
