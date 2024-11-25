@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.16788329, g: 0.21073541, b: 0.2899403, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -142,10 +142,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnConfig:
+    factories:
+    - {fileID: 11400000, guid: 8f6097dd9e9c54cb2b8df0bc72a9387d, type: 2}
+    - {fileID: 11400000, guid: 8f6097dd9e9c54cb2b8df0bc72a9387d, type: 2}
+    - {fileID: 11400000, guid: c41f98beca71049adb1f8d789c12b2d2, type: 2}
     movementDirection: 2
     speed:
-      min: 1.5
-      max: 2.5
+      min: 0
+      max: 0
     angularSpeed:
       min: 0
       max: 90
@@ -162,6 +166,7 @@ MonoBehaviour:
       value:
         min: 0.25
         max: 1
+    uniformColor: 0
   surfaceOnly: 0
 --- !u!4 &41162319
 Transform:
