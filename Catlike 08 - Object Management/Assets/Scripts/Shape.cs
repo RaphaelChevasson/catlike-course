@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Shape : PersistableObject {
 
 	static int colorPropertyId = Shader.PropertyToID("_Color");
 
 	static MaterialPropertyBlock sharedPropertyBlock;
+
+	public float Age { get; private set; }
 
 	public int ColorCount {
 		get {
@@ -27,10 +30,6 @@ public class Shape : PersistableObject {
 			}
 		}
 	}
-
-	public Vector3 AngularVelocity { get; set; }
-
-	public Vector3 Velocity { get; set; }
 
 	public ShapeFactory OriginFactory {
 		get {
@@ -55,16 +54,31 @@ public class Shape : PersistableObject {
 
 	Color[] colors;
 
+	List<ShapeBehavior> behaviorList = new List<ShapeBehavior>();
+
 	void Awake () {
 		colors = new Color[meshRenderers.Length];
 	}
 
+	public T AddBehavior<T> () where T : ShapeBehavior, new() {
+		T behavior = ShapeBehaviorPool<T>.Get();
+		behaviorList.Add(behavior);
+		return behavior;
+	}
+
 	public void GameUpdate () {
-		transform.Rotate(AngularVelocity * Time.deltaTime);
-		transform.localPosition += Velocity * Time.deltaTime;
+		Age += Time.deltaTime;
+		for (int i = 0; i < behaviorList.Count; i++) {
+			behaviorList[i].GameUpdate(this);
+		}
 	}
 
 	public void Recycle () {
+		Age = 0f;
+		for (int i = 0; i < behaviorList.Count; i++) {
+			behaviorList[i].Recycle();
+		}
+		behaviorList.Clear();
 		OriginFactory.Reclaim(this);
 	}
 
@@ -101,8 +115,12 @@ public class Shape : PersistableObject {
 		for (int i = 0; i < colors.Length; i++) {
 			writer.Write(colors[i]);
 		}
-		writer.Write(AngularVelocity);
-		writer.Write(Velocity);
+		writer.Write(Age);
+		writer.Write(behaviorList.Count);
+		for (int i = 0; i < behaviorList.Count; i++) {
+			writer.Write((int)behaviorList[i].BehaviorType);
+			behaviorList[i].Save(writer);
+		}
 	}
 
 	public override void Load (GameDataReader reader) {
@@ -113,9 +131,21 @@ public class Shape : PersistableObject {
 		else {
 			SetColor(reader.Version > 0 ? reader.ReadColor() : Color.white);
 		}
-		AngularVelocity =
-			reader.Version >= 4 ? reader.ReadVector3() : Vector3.zero;
-		Velocity = reader.Version >= 4 ? reader.ReadVector3() : Vector3.zero;
+		if (reader.Version >= 6) {
+			Age = reader.ReadFloat();
+			int behaviorCount = reader.ReadInt();
+			for (int i = 0; i < behaviorCount; i++) {
+				ShapeBehavior behavior =
+					((ShapeBehaviorType)reader.ReadInt()).GetInstance();
+				behaviorList.Add(behavior);
+				behavior.Load(reader);
+			}
+		}
+		else if (reader.Version >= 4) {
+			AddBehavior<RotationShapeBehavior>().AngularVelocity =
+				reader.ReadVector3();
+			AddBehavior<MovementShapeBehavior>().Velocity = reader.ReadVector3();
+		}
 	}
 
 	void LoadColors (GameDataReader reader) {

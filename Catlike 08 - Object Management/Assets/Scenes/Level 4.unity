@@ -167,6 +167,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 0
+    oscillationAmplitude:
+      min: 1
+      max: 1
+    oscillationFrequency:
+      min: 0.25
+      max: 0.25
   surfaceOnly: 0
 --- !u!4 &41162319
 Transform:
@@ -334,6 +341,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 0
+    oscillationAmplitude:
+      min: 1
+      max: 1
+    oscillationFrequency:
+      min: 0.125
+      max: 0.125
   surfaceOnly: 0
 --- !u!1 &979063396
 GameObject:
@@ -507,6 +521,13 @@ MonoBehaviour:
         min: 0
         max: 0
     uniformColor: 0
+    oscillationDirection: 0
+    oscillationAmplitude:
+      min: 0
+      max: 0
+    oscillationFrequency:
+      min: 0
+      max: 0
   overrideConfig: 0
   sequential: 1
   spawnZones:

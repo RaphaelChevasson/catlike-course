@@ -164,6 +164,13 @@ MonoBehaviour:
         min: 0
         max: 1
     uniformColor: 0
+    oscillationDirection: 0
+    oscillationAmplitude:
+      min: 0
+      max: 0
+    oscillationFrequency:
+      min: 0
+      max: 0
   overrideConfig: 0
   sequential: 1
   spawnZones:
@@ -242,6 +249,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 3
+    oscillationAmplitude:
+      min: 0
+      max: 0.5
+    oscillationFrequency:
+      min: 0.25
+      max: 0.5
   surfaceOnly: 0
 --- !u!4 &186091358
 Transform:
@@ -415,6 +429,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 3
+    oscillationAmplitude:
+      min: 0
+      max: 0.5
+    oscillationFrequency:
+      min: 0.25
+      max: 0.5
   surfaceOnly: 0
 --- !u!4 &1078699395
 Transform:
@@ -480,6 +501,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 0
+    oscillationAmplitude:
+      min: 0
+      max: 0
+    oscillationFrequency:
+      min: 0
+      max: 0
   surfaceOnly: 0
 --- !u!4 &1122061236
 Transform:
@@ -545,6 +573,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 3
+    oscillationAmplitude:
+      min: 0
+      max: 0.5
+    oscillationFrequency:
+      min: 0.25
+      max: 0.5
   surfaceOnly: 0
 --- !u!4 &1374814927
 Transform:
@@ -610,6 +645,13 @@ MonoBehaviour:
         min: 0.25
         max: 1
     uniformColor: 0
+    oscillationDirection: 3
+    oscillationAmplitude:
+      min: 0
+      max: 0.5
+    oscillationFrequency:
+      min: 0.25
+      max: 0.5
   surfaceOnly: 0
 --- !u!4 &1769045896
 Transform:

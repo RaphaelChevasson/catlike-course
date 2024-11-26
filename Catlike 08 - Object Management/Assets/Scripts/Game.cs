@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public class Game : PersistableObject {
 
-	const int saveVersion = 5;
+	const int saveVersion = 6;
 
 	[SerializeField] ShapeFactory[] shapeFactories;
 
