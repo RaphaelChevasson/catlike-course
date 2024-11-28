@@ -9,6 +9,10 @@ public class Shape : PersistableObject {
 
 	public float Age { get; private set; }
 
+	public int InstanceId { get; private set; }
+
+	public int SaveIndex { get; set; }
+
 	public int ColorCount {
 		get {
 			return colors.Length;
@@ -69,17 +73,27 @@ public class Shape : PersistableObject {
 	public void GameUpdate () {
 		Age += Time.deltaTime;
 		for (int i = 0; i < behaviorList.Count; i++) {
-			behaviorList[i].GameUpdate(this);
+			if (!behaviorList[i].GameUpdate(this)) {
+				behaviorList[i].Recycle();
+				behaviorList.RemoveAt(i--);
+			}
 		}
 	}
 
 	public void Recycle () {
 		Age = 0f;
+		InstanceId += 1;
 		for (int i = 0; i < behaviorList.Count; i++) {
 			behaviorList[i].Recycle();
 		}
 		behaviorList.Clear();
 		OriginFactory.Reclaim(this);
+	}
+
+	public void ResolveShapeInstances () {
+		for (int i = 0; i < behaviorList.Count; i++) {
+			behaviorList[i].ResolveShapeInstances();
+		}
 	}
 
 	public void SetColor (Color color) {

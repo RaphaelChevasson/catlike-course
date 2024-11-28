@@ -33,27 +33,35 @@ public abstract class SpawnZone : PersistableObject {
 		public FloatRange oscillationAmplitude;
 
 		public FloatRange oscillationFrequency;
+
+		[System.Serializable]
+		public struct SatelliteConfiguration {
+
+			public IntRange amount;
+
+			[FloatRangeSlider(0.1f, 1f)]
+			public FloatRange relativeScale;
+
+			public FloatRange orbitRadius;
+
+			public FloatRange orbitFrequency;
+		}
+
+		public SatelliteConfiguration satellite;
 	}
 
 	[SerializeField]
 	SpawnConfiguration spawnConfig;
 
-	public virtual Shape SpawnShape () {
-		int factoryIndex = Random.Range(0, spawnConfig.factories.Length);
+	public virtual void SpawnShapes () {
+	int factoryIndex = Random.Range(0, spawnConfig.factories.Length);
 		Shape shape = spawnConfig.factories[factoryIndex].GetRandom();
 
 		Transform t = shape.transform;
 		t.localPosition = SpawnPoint;
 		t.localRotation = Random.rotation;
 		t.localScale = Vector3.one * spawnConfig.scale.RandomValueInRange;
-		if (spawnConfig.uniformColor) {
-			shape.SetColor(spawnConfig.color.RandomInRange);
-		}
-		else {
-			for (int i = 0; i < shape.ColorCount; i++) {
-				shape.SetColor(spawnConfig.color.RandomInRange, i);
-			}
-		}
+		SetupColor(shape);
 
 		float angularSpeed = spawnConfig.angularSpeed.RandomValueInRange;
 		if (angularSpeed != 0f) {
@@ -63,28 +71,44 @@ public abstract class SpawnZone : PersistableObject {
 
 		float speed = spawnConfig.speed.RandomValueInRange;
 		if (speed != 0f) {
-			//Vector3 direction;
-			//switch (spawnConfig.movementDirection) {
-			//	case SpawnConfiguration.MovementDirection.Upward:
-			//		direction = transform.up;
-			//		break;
-			//	case SpawnConfiguration.MovementDirection.Outward:
-			//		direction = (t.localPosition - transform.position).normalized;
-			//		break;
-			//	case SpawnConfiguration.MovementDirection.Random:
-			//		direction = Random.onUnitSphere;
-			//		break;
-			//	default:
-			//		direction = transform.forward;
-			//		break;
-			//}
 			var movement = shape.AddBehavior<MovementShapeBehavior>();
 			movement.Velocity =
 				GetDirectionVector(spawnConfig.movementDirection, t) * speed;
 		}
 
 		SetupOscillation(shape);
-		return shape;
+
+		int satelliteCount = spawnConfig.satellite.amount.RandomValueInRange;
+		for (int i = 0; i < satelliteCount; i++) {
+			CreateSatelliteFor(shape);
+		}
+	}
+
+	void CreateSatelliteFor (Shape focalShape) {
+		int factoryIndex = Random.Range(0, spawnConfig.factories.Length);
+		Shape shape = spawnConfig.factories[factoryIndex].GetRandom();
+		Transform t = shape.transform;
+		t.localRotation = Random.rotation;
+		t.localScale =
+			focalShape.transform.localScale *
+			spawnConfig.satellite.relativeScale.RandomValueInRange;
+		SetupColor(shape);
+		shape.AddBehavior<SatelliteShapeBehavior>().Initialize(
+			shape, focalShape,
+			spawnConfig.satellite.orbitRadius.RandomValueInRange,
+			spawnConfig.satellite.orbitFrequency.RandomValueInRange
+		);
+	}
+
+	void SetupColor (Shape shape) {
+		if (spawnConfig.uniformColor) {
+			shape.SetColor(spawnConfig.color.RandomInRange);
+		}
+		else {
+			for (int i = 0; i < shape.ColorCount; i++) {
+				shape.SetColor(spawnConfig.color.RandomInRange, i);
+			}
+		}
 	}
 
 	void SetupOscillation (Shape shape) {

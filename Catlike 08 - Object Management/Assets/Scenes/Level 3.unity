@@ -171,6 +171,19 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0
       max: 0
+    satellite:
+      amount:
+        min: 0
+        max: 0
+      relativeScale:
+        min: 0
+        max: 0
+      orbitRadius:
+        min: 0
+        max: 0
+      orbitFrequency:
+        min: 0
+        max: 0
   overrideConfig: 0
   sequential: 1
   spawnZones:
@@ -253,6 +266,19 @@ MonoBehaviour:
     oscillationFrequency:
       min: 1
       max: 2
+    satellite:
+      amount:
+        min: 0
+        max: 0
+      relativeScale:
+        min: 0.1
+        max: 0.1
+      orbitRadius:
+        min: 0
+        max: 0
+      orbitFrequency:
+        min: 0
+        max: 0
   surfaceOnly: 0
 --- !u!4 &186091358
 Transform:
@@ -294,6 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3897040bc81204e53bc0e58a22a70f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  populationLimit: 1000
   spawnZone: {fileID: 41162318}
   persistentObjects:
   - {fileID: 41162318}
@@ -369,6 +396,19 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0
       max: 0
+    satellite:
+      amount:
+        min: -3
+        max: 2
+      relativeScale:
+        min: 0.25
+        max: 0.25
+      orbitRadius:
+        min: 0.75
+        max: 1
+      orbitFrequency:
+        min: 0.25
+        max: 0.25
   surfaceOnly: 0
 --- !u!4 &838659758
 Transform:
@@ -506,6 +546,19 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0.25
       max: 0.25
+    satellite:
+      amount:
+        min: -5
+        max: 1
+      relativeScale:
+        min: 0.1
+        max: 0.2
+      orbitRadius:
+        min: 0.75
+        max: 1
+      orbitFrequency:
+        min: 0.75
+        max: 1
   surfaceOnly: 1
 --- !u!4 &1819725318
 Transform:
@@ -578,6 +631,19 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0.5
       max: 1
+    satellite:
+      amount:
+        min: 0
+        max: 1
+      relativeScale:
+        min: 0.25
+        max: 0.5
+      orbitRadius:
+        min: 0.75
+        max: 1.25
+      orbitFrequency:
+        min: 0.5
+        max: 1
   surfaceOnly: 1
 --- !u!4 &2070164973
 Transform:

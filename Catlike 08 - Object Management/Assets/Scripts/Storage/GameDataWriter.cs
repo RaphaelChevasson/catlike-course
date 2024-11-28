@@ -35,6 +35,10 @@ public class GameDataWriter {
 		writer.Write(JsonUtility.ToJson(value));
 	}
 
+	public void Write (ShapeInstance value) {
+		writer.Write(value.IsValid ? value.Shape.SaveIndex : -1);
+	}
+
 	public void Write (Vector3 value) {
 		writer.Write(value.x);
 		writer.Write(value.y);

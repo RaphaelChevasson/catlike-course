@@ -154,7 +154,7 @@ MonoBehaviour:
       min: 0
       max: 90
     scale:
-      min: 0.1
+      min: 0.5
       max: 1
     color:
       hue:
@@ -169,11 +169,24 @@ MonoBehaviour:
     uniformColor: 0
     oscillationDirection: 2
     oscillationAmplitude:
-      min: 0.1
-      max: 1
+      min: 0
+      max: 0
     oscillationFrequency:
       min: 0.5
       max: 1
+    satellite:
+      amount:
+        min: 0
+        max: 3
+      relativeScale:
+        min: 0.25
+        max: 0.5
+      orbitRadius:
+        min: 1
+        max: 2
+      orbitFrequency:
+        min: 0.25
+        max: 0.5
   surfaceOnly: 0
 --- !u!4 &41162319
 Transform:
@@ -215,6 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3897040bc81204e53bc0e58a22a70f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  populationLimit: 100
   spawnZone: {fileID: 41162318}
   persistentObjects: []
 --- !u!4 &741244552
