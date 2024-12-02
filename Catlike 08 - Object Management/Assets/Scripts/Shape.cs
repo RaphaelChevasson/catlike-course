@@ -11,6 +11,12 @@ public class Shape : PersistableObject {
 
 	public int InstanceId { get; private set; }
 
+	public bool IsMarkedAsDying {
+		get {
+			return Game.Instance.IsMarkedAsDying(this);
+		}
+	}
+
 	public int SaveIndex { get; set; }
 
 	public int ColorCount {
@@ -70,6 +76,10 @@ public class Shape : PersistableObject {
 		return behavior;
 	}
 
+	public void Die () {
+		Game.Instance.Kill(this);
+	}
+
 	public void GameUpdate () {
 		Age += Time.deltaTime;
 		for (int i = 0; i < behaviorList.Count; i++) {
@@ -78,6 +88,10 @@ public class Shape : PersistableObject {
 				behaviorList.RemoveAt(i--);
 			}
 		}
+	}
+
+	public void MarkAsDying () {
+		Game.Instance.MarkAsDying(this);
 	}
 
 	public void Recycle () {

@@ -184,9 +184,26 @@ MonoBehaviour:
       orbitFrequency:
         min: 0
         max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 0
+        max: 0
+      adultDuration:
+        min: 0
+        max: 0
+      dyingDuration:
+        min: 0
+        max: 0
   overrideConfig: 0
   sequential: 1
   spawnZones:
+  - {fileID: 1122061235}
+  - {fileID: 1122061235}
+  - {fileID: 1122061235}
+  - {fileID: 1122061235}
+  - {fileID: 1122061235}
+  - {fileID: 1122061235}
   - {fileID: 1122061235}
   - {fileID: 1122061235}
   - {fileID: 186091357}
@@ -274,14 +291,25 @@ MonoBehaviour:
         min: 0
         max: 0
       relativeScale:
-        min: 0
-        max: 0
+        min: 0.1
+        max: 0.1
       orbitRadius:
         min: 0
         max: 0
       orbitFrequency:
         min: 0
         max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 1
+        max: 2
+      adultDuration:
+        min: 20
+        max: 30
+      dyingDuration:
+        min: 1
+        max: 2
   surfaceOnly: 0
 --- !u!4 &186091358
 Transform:
@@ -323,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3897040bc81204e53bc0e58a22a70f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  populationLimit: 1000
+  populationLimit: 0
   spawnZone: {fileID: 41162318}
   persistentObjects:
   - {fileID: 41162318}
@@ -468,14 +496,25 @@ MonoBehaviour:
         min: 0
         max: 0
       relativeScale:
-        min: 0
-        max: 0
+        min: 0.1
+        max: 0.1
       orbitRadius:
         min: 0
         max: 0
       orbitFrequency:
         min: 0
         max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 1
+        max: 2
+      adultDuration:
+        min: 20
+        max: 30
+      dyingDuration:
+        min: 1
+        max: 2
   surfaceOnly: 0
 --- !u!4 &1078699395
 Transform:
@@ -561,6 +600,17 @@ MonoBehaviour:
       orbitFrequency:
         min: 0.1
         max: 0.25
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 0.5
+        max: 1
+      adultDuration:
+        min: 2
+        max: 4
+      dyingDuration:
+        min: 0.5
+        max: 1
   surfaceOnly: 0
 --- !u!4 &1122061236
 Transform:
@@ -638,14 +688,25 @@ MonoBehaviour:
         min: 0
         max: 0
       relativeScale:
-        min: 0
-        max: 0
+        min: 0.1
+        max: 0.1
       orbitRadius:
         min: 0
         max: 0
       orbitFrequency:
         min: 0
         max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 1
+        max: 2
+      adultDuration:
+        min: 20
+        max: 30
+      dyingDuration:
+        min: 1
+        max: 2
   surfaceOnly: 0
 --- !u!4 &1374814927
 Transform:
@@ -723,14 +784,25 @@ MonoBehaviour:
         min: 0
         max: 0
       relativeScale:
-        min: 0
-        max: 0
+        min: 0.1
+        max: 0.1
       orbitRadius:
         min: 0
         max: 0
       orbitFrequency:
         min: 0
         max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 1
+        max: 2
+      adultDuration:
+        min: 20
+        max: 30
+      dyingDuration:
+        min: 1
+        max: 2
   surfaceOnly: 0
 --- !u!4 &1769045896
 Transform:

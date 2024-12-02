@@ -256,6 +256,7 @@ MonoBehaviour:
   reseedOnLoad: 0
   creationSpeedSlider: {fileID: 1247886085}
   destructionSpeedSlider: {fileID: 2050843676}
+  destroyDuration: 1
 --- !u!4 &145765154
 Transform:
   m_ObjectHideFlags: 0

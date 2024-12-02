@@ -174,6 +174,30 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0.25
       max: 0.25
+    satellite:
+      amount:
+        min: 0
+        max: 0
+      relativeScale:
+        min: 0.1
+        max: 0.1
+      orbitRadius:
+        min: 0
+        max: 0
+      orbitFrequency:
+        min: 0
+        max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 1
+        max: 2
+      adultDuration:
+        min: 0
+        max: 0
+      dyingDuration:
+        min: 0
+        max: 0
   surfaceOnly: 0
 --- !u!4 &41162319
 Transform:
@@ -215,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3897040bc81204e53bc0e58a22a70f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  populationLimit: 0
   spawnZone: {fileID: 2093144679}
   persistentObjects:
   - {fileID: 835360828}
@@ -348,6 +373,30 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0.125
       max: 0.125
+    satellite:
+      amount:
+        min: 0
+        max: 0
+      relativeScale:
+        min: 0.1
+        max: 0.1
+      orbitRadius:
+        min: 0
+        max: 0
+      orbitFrequency:
+        min: 0
+        max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 0.5
+        max: 1
+      adultDuration:
+        min: 0
+        max: 0
+      dyingDuration:
+        min: 0
+        max: 0
   surfaceOnly: 0
 --- !u!1 &979063396
 GameObject:
@@ -528,6 +577,30 @@ MonoBehaviour:
     oscillationFrequency:
       min: 0
       max: 0
+    satellite:
+      amount:
+        min: 0
+        max: 0
+      relativeScale:
+        min: 0
+        max: 0
+      orbitRadius:
+        min: 0
+        max: 0
+      orbitFrequency:
+        min: 0
+        max: 0
+      uniformLifecycles: 0
+    lifecycle:
+      growingDuration:
+        min: 0
+        max: 0
+      adultDuration:
+        min: 0
+        max: 0
+      dyingDuration:
+        min: 0
+        max: 0
   overrideConfig: 0
   sequential: 1
   spawnZones:
