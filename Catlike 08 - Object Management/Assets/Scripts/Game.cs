@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public class Game : PersistableObject {
 
-	const int saveVersion = 6;
+	const int saveVersion = 7;
 
 	public static Game Instance { get; private set; }
 
@@ -112,6 +112,7 @@ public class Game : PersistableObject {
 		for (int i = 0; i < shapes.Count; i++) {
 			shapes[i].GameUpdate();
 		}
+		GameLevel.Current.GameUpdate();
 		inGameUpdateLoop = false;
 
 		creationProgress += Time.deltaTime * CreationSpeed;

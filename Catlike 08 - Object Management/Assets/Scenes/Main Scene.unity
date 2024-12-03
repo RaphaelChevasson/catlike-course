@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 112000004, guid: a3d72f67318904c77bbd25d3516f1220,
+  m_LightingDataAsset: {fileID: 112000004, guid: 6987aa74319434e499c66e392c89761e,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -252,7 +252,7 @@ MonoBehaviour:
   saveKey: 115
   loadKey: 108
   storage: {fileID: 1960016661}
-  levelCount: 5
+  levelCount: 6
   reseedOnLoad: 0
   creationSpeedSlider: {fileID: 1247886085}
   destructionSpeedSlider: {fileID: 2050843676}

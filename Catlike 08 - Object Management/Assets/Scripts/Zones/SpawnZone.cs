@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-public abstract class SpawnZone : PersistableObject {
+public abstract class SpawnZone : GameLevelObject {
 
 	public abstract Vector3 SpawnPoint { get; }
+
+	[SerializeField, Range(0f, 50f)]
+	float spawnSpeed;
 
 	[System.Serializable]
 	public struct SpawnConfiguration {
@@ -80,10 +83,12 @@ public abstract class SpawnZone : PersistableObject {
 	[SerializeField]
 	SpawnConfiguration spawnConfig;
 
+	float spawnProgress;
+
 	public virtual void SpawnShapes () {
 		int factoryIndex = Random.Range(0, spawnConfig.factories.Length);
 		Shape shape = spawnConfig.factories[factoryIndex].GetRandom();
-
+		shape.gameObject.layer = gameObject.layer;
 		Transform t = shape.transform;
 		t.localPosition = SpawnPoint;
 		t.localRotation = Random.rotation;
@@ -122,6 +127,7 @@ public abstract class SpawnZone : PersistableObject {
 	void CreateSatelliteFor (Shape focalShape, Vector3 lifecycleDurations) {
 		int factoryIndex = Random.Range(0, spawnConfig.factories.Length);
 		Shape shape = spawnConfig.factories[factoryIndex].GetRandom();
+		shape.gameObject.layer = gameObject.layer;
 		Transform t = shape.transform;
 		t.localRotation = Random.rotation;
 		t.localScale =
@@ -198,5 +204,21 @@ public abstract class SpawnZone : PersistableObject {
 			default:
 				return transform.forward;
 		}
+	}
+
+	public override void GameUpdate () {
+		spawnProgress += Time.deltaTime * spawnSpeed;
+		while (spawnProgress >= 1f) {
+			spawnProgress -= 1f;
+			SpawnShapes();
+		}
+	}
+
+	public override void Save (GameDataWriter writer) {
+		writer.Write(spawnProgress);
+	}
+
+	public override void Load (GameDataReader reader) {
+		spawnProgress = reader.ReadFloat();
 	}
 }

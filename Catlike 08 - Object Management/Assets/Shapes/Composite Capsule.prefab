@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4113700768711960}
   - component: {fileID: 33529447173939038}
-  - component: {fileID: 136621209508749022}
   - component: {fileID: 23357199533162248}
   - component: {fileID: 114398840932527972}
+  - component: {fileID: 135241163428368004}
   m_Layer: 0
   m_Name: Composite Capsule
   m_TagString: Untagged
@@ -39,7 +39,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4233605181757944}
   - component: {fileID: 33827121720238496}
-  - component: {fileID: 136943863392515234}
   - component: {fileID: 23531863437134756}
   m_Layer: 0
   m_Name: Capsule X
@@ -57,7 +56,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4073974892826690}
   - component: {fileID: 33438868856321010}
-  - component: {fileID: 136273461300979520}
   - component: {fileID: 23981517887309716}
   m_Layer: 0
   m_Name: Capsule Z
@@ -245,21 +243,8 @@ MonoBehaviour:
   - {fileID: 23357199533162248}
   - {fileID: 23531863437134756}
   - {fileID: 23981517887309716}
---- !u!136 &136273461300979520
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1730881455555172}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136621209508749022
-CapsuleCollider:
+--- !u!135 &135241163428368004
+SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -267,20 +252,6 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136943863392515234
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1564940912701918}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 2
+  m_Radius: 0.9
   m_Center: {x: 0, y: 0, z: 0}
