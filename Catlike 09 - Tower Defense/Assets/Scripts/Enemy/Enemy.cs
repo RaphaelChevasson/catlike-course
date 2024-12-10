@@ -35,14 +35,15 @@ public class Enemy : GameBehavior {
 
 	public override bool GameUpdate () {
 		if (Health <= 0f) {
-			OriginFactory.Reclaim(this);
+			Recycle();
 			return false;
 		}
 
 		progress += Time.deltaTime * progressFactor;
 		while (progress >= 1f) {
 			if (tileTo == null) {
-				OriginFactory.Reclaim(this);
+				Game.EnemyReachedDestination();
+				Recycle();
 				return false;
 			}
 			progress = (progress - 1f) / progressFactor;
@@ -62,12 +63,18 @@ public class Enemy : GameBehavior {
 		return true;
 	}
 
-	public void Initialize (float scale, float speed, float pathOffset) {
+	public override void Recycle () {
+		OriginFactory.Reclaim(this);
+	}
+
+	public void Initialize (
+		float scale, float speed, float pathOffset, float health
+	) {
 		Scale = scale;
 		model.localScale = new Vector3(scale, scale, scale);
 		this.speed = speed;
 		this.pathOffset = pathOffset;
-		Health = 100f * scale;
+		Health = health;
 	}
 
 	public void SpawnOn (GameTile tile) {

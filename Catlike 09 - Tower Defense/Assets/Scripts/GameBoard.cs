@@ -90,11 +90,17 @@ public class GameBoard : MonoBehaviour {
 				if ((y & 1) == 0) {
 					tile.IsAlternative = !tile.IsAlternative;
 				}
-
-				tile.Content = contentFactory.Get(GameTileContentType.Empty);
 			}
 		}
+		Clear();
+	}
 
+	public void Clear () {
+		foreach (GameTile tile in tiles) {
+			tile.Content = contentFactory.Get(GameTileContentType.Empty);
+		}
+		spawnPoints.Clear();
+		updatingContent.Clear();
 		ToggleDestination(tiles[tiles.Length / 2]);
 		ToggleSpawnPoint(tiles[0]);
 	}

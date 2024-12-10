@@ -24,7 +24,6 @@ public class GameTileContentFactory : GameObjectFactory {
 			case GameTileContentType.Empty: return Get(emptyPrefab);
 			case GameTileContentType.Wall: return Get(wallPrefab);
 			case GameTileContentType.SpawnPoint: return Get(spawnPointPrefab);
-			//case GameTileContentType.Tower: return Get(towerPrefab);
 		}
 		Debug.Assert(false, "Unsupported non-tower type: " + type);
 		return null;
