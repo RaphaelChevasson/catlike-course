@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Distortion Flow
-  m_Shader: {fileID: 4800000, guid: 2e72d6de6c09d490493a2b3ee9b31e80, type: 3}
+  m_Shader: {fileID: 4800000, guid: 23118c60e8fa9446db3d02f7a4a58be4, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -83,6 +83,7 @@ Material:
     - _ModulatedHeightScale: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _RefractionStrength: 0.25
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Speed: 0.5
@@ -90,9 +91,11 @@ Material:
     - _Tiling: 3
     - _UJump: 0.24
     - _UVSec: 0
-    - _VJump: 0.20833333
+    - _VJump: 0.2083333
+    - _WaterFogDensity: 0.15
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.3065528, g: 0.5147804, b: 0.66176474, a: 1}
+    - _Color: {r: 0.30655247, g: 0.5147804, b: 0.6617647, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _UVJump: {r: 0, g: 0, b: 0, a: 0}
+    - _WaterFogColor: {r: 0.30588236, g: 0.5137255, b: 0.6627451, a: 1}
